@@ -23,9 +23,9 @@
 	<key>RelativePosition</key>
 	<integer>1</integer>
 	<key>Script</key>
-	<string>curl ~/GitHub/geeklets/lib/weather.html</string>
+	<string>curl /Users/Tommy/GitHub/geeklets-hs/weather.html</string>
 	<key>URL</key>
-	<string>/Users/Tommy/GitHub/geeklets/lib/weather.html</string>
+	<string>/Users/Tommy/GitHub/geeklets-hs/weather.html</string>
 	<key>WebGeekletType</key>
 	<integer>0</integer>
 	<key>Zoom</key>
