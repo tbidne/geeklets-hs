@@ -1,0 +1,25 @@
+name: stack build
+
+on:
+  push:
+    branches:
+      - master
+
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup stack
+        uses: mstksg/setup-stack@v1
+
+      - name: Build and test
+        run: stack test --ghc-options="-Werror"
+        env:
+          CI: "Github Actions"
+
