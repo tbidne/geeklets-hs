@@ -4,8 +4,7 @@ module Common
     captureOne,
     intToChar,
     intStrToGeekLetsChar,
-    readInt,
-    readInteger,
+    readResult,
     trim,
   )
 where
@@ -35,20 +34,14 @@ intToChar i
 chars :: String
 chars = ['a' .. 'z'] ++ ['A' .. 'Y']
 
-readInt :: String -> RunResult Int
-readInt s =
-  case TR.readMaybe s of
-    Just i -> RSuccess i
-    Nothing -> RFailure $ "Could not parse to int: " <> s
-
-readInteger :: String -> RunResult Integer
-readInteger s =
+readResult :: Read a => String -> RunResult a
+readResult s =
   case TR.readMaybe s of
     Just f -> RSuccess f
-    Nothing -> RFailure $ "Could not convert to integer: " <> s
+    Nothing -> RFailure $ "Could not read: " <> s
 
 intStrToGeekLetsChar :: String -> RunResult String
-intStrToGeekLetsChar = readInt >=> intToChar
+intStrToGeekLetsChar = readResult >=> intToChar
 
 trim :: String -> String
 trim = reverse . trim' . reverse . trim'

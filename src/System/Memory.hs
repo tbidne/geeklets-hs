@@ -23,7 +23,7 @@ parseRaw = matchRx >=> intStrToGeekLetsChar
 matchRx :: String -> RunResultStr
 matchRx s =
   case captureOne s regex of
-    "" -> RFailure $ "Could not parse number from " <> s
+    "" -> RFailure $ "Could not parse number from: " <> s
     s' -> RSuccess s'
 
 regex :: String

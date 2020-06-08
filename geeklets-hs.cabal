@@ -1,10 +1,10 @@
 cabal-version: 1.12
 
--- This file has been generated from package.yaml by hpack version 0.31.2.
+-- This file has been generated from package.yaml by hpack version 0.33.0.
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: e2820d7ada431e63a516a03f987e73e3b22599d5b767a7102d1449aabfcac008
+-- hash: 7c32dda1f2ffe0ca9800e9cbb3f9dff2464a6efdadc6c5e80d476fd87c6e92ce
 
 name:           geeklets-hs
 version:        0.1.0.0
@@ -27,6 +27,7 @@ source-repository head
 
 library
   exposed-modules:
+      Bytes
       Common
       Freer
       IOUtils
