@@ -1,3 +1,6 @@
+{-# LANGUAGE DataKinds #-}
+{-# LANGUAGE KindSignatures #-}
+
 module Network.IP
   ( getIPs,
   )
@@ -5,26 +8,37 @@ where
 
 import IOUtils
 
+data IPType
+  = Local
+  | Global
+
+newtype IP (a :: IPType) = MkIP String
+
 getIPs :: IO RunResultStr
 getIPs = do
   l <- ipLocal
   g <- ipGlobal
-  let ips = (,) <$> l <*> g
-  pure $ fmap combineIPs ips
+  pure $ combineIPs <$> l <*> g
 
-combineIPs :: (String, String) -> String
-combineIPs (l, g) =
-  "Local  IP: "
-    <> l
-    <> "\nGlobal IP: "
-    <> g
+combineIPs :: IP 'Local -> IP 'Global -> String
+combineIPs l g =
+  dispLocalIP l
+    <> "\n"
+    <> dispGlobalIP g
 
-ipLocal :: IO RunResultStr
+ipLocal :: IO (RunResult (IP 'Local))
 ipLocal =
-  runCmd
-    "ifconfig en0\
-    \ | grep inet | grep -v inet6\
-    \ | awk '{print $2}'"
+  (fmap . fmap) MkIP $
+    runCmd
+      "ifconfig en0\
+      \ | grep inet | grep -v inet6\
+      \ | awk '{print $2}'"
 
-ipGlobal :: IO RunResultStr
-ipGlobal = runCmd "curl --silent http://ipecho.net/plain"
+ipGlobal :: IO (RunResult (IP 'Global))
+ipGlobal = (fmap . fmap) MkIP $ runCmd "curl --silent http://ipecho.net/plain"
+
+dispLocalIP :: IP 'Local -> String
+dispLocalIP (MkIP s) = "Local  IP: " <> s
+
+dispGlobalIP :: IP 'Global -> String
+dispGlobalIP (MkIP s) = "Global IP: " <> s

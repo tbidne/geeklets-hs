@@ -1,5 +1,6 @@
+{-# LANGUAGE DataKinds #-}
+{-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE NumericUnderscores #-}
-{-# LANGUAGE TypeApplications #-}
 
 module Network.Total
   ( getTotal,
@@ -9,7 +10,8 @@ where
 import Common
 import IOUtils
 import Text.Printf as TP
-import Text.Read as TR
+
+import Bytes
 
 getTotal :: IO RunResultStr
 getTotal = rawTotal >>= (pure . (=<<) parseRaw)
@@ -27,35 +29,26 @@ parseRaw s =
   let (_, _, _, matches) = s `capture` regex
    in case matches of
         [downNum, downSfx, upNum, upSfx] ->
-          let down = resToDisp downNum downSfx
-              up = resToDisp upNum upSfx
-              totals = (,) <$> down <*> up
-           in fmap combineTotals totals
+          let bytes = readBytesPair downNum upNum
+          in fmap (dispBytes (formatDown downSfx) (formatUp upSfx)) bytes
         _ -> RFailure $ "Incorrectly formatted: " <> show matches
 
 regex :: String
 regex = "[0-9]+\\/([0-9]+)([KMG]) [0-9]+\\/([0-9]+)([KMG])"
 
-combineTotals :: (String, String) -> String
-combineTotals (down, up) =
-  "Downloaded: "
-    <> down
-    <> "\nUploaded:     "
-    <> up
+formatDown :: String -> Bytes 'Down Float -> String
+formatDown sfx (MkBytes d) = "Downloaded: " <> dispFloat d sfx
 
-resToDisp :: String -> String -> RunResultStr
-resToDisp num sfx =
-  case TR.readMaybe @Float num of
-    Just n
-      | n > 999 -> RSuccess $ rnd n sfx
-      | otherwise -> RSuccess $ num <> sfx
-    Nothing -> RFailure $ "Could not parse num " <> num <> " and suffix " <> sfx
+formatUp :: String -> Bytes 'Up Float -> String
+formatUp sfx (MkBytes u) = "Uploaded:     " <> dispFloat u sfx
 
-rnd :: Float -> String -> String
-rnd x sfx = TP.printf "%.2f" (x / 1_000) <> incSfx sfx
-
-incSfx :: String -> String
-incSfx "K" = "M"
-incSfx "M" = "G"
-incSfx "G" = "T"
-incSfx x = x
+dispFloat :: Float -> String -> String
+dispFloat x sfx
+  | x > 999 = rnd x sfx
+  | otherwise = show x <> sfx
+  where rnd n = TP.printf "%.2f" (n / 1_000)
+          <> (\case
+               "K" -> "M"
+               "M" -> "G"
+               "G" -> "T"
+               t -> t)
