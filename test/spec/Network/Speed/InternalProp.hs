@@ -24,9 +24,6 @@ isRSuccess :: RunResult a -> Bool
 isRSuccess (RSuccess _) = True
 isRSuccess _ = False
 
-newtype TwoBytesStr = TwoBytesStr ((Integer, Integer, String), (Integer, Integer, String))
-  deriving (Eq, Show)
-
 gen2BytesStr :: Gen (BytesStr, BytesStr)
 gen2BytesStr = do
   x <- genBytesStr
