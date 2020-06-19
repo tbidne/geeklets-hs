@@ -1,17 +1,16 @@
 {-# LANGUAGE DataKinds #-}
-{-# LANGUAGE LambdaCase #-}
-{-# LANGUAGE NumericUnderscores #-}
+{-# LANGUAGE GADTs #-}
+{-# LANGUAGE TypeApplications #-}
 
 module Network.Total
   ( getTotal,
   )
 where
 
+import Bytes.NetworkBytes
 import Common
+import Control.Applicative (liftA2)
 import IOUtils
-import Text.Printf as TP
-
-import Bytes
 
 getTotal :: IO RunResultStr
 getTotal = rawTotal >>= (pure . (=<<) parseRaw)
@@ -29,26 +28,28 @@ parseRaw s =
   let (_, _, _, matches) = s `capture` regex
    in case matches of
         [downNum, downSfx, upNum, upSfx] ->
-          let bytes = readBytesPair downNum upNum
-          in fmap (dispBytes (formatDown downSfx) (formatUp upSfx)) bytes
+          let d' = readAndNormalize downNum downSfx
+              u' = readAndNormalize upNum upSfx
+           in liftA2 dispTotal d' u'
         _ -> RFailure $ "Incorrectly formatted: " <> show matches
 
 regex :: String
 regex = "[0-9]+\\/([0-9]+)([KMG]) [0-9]+\\/([0-9]+)([KMG])"
 
-formatDown :: String -> Bytes 'Down Float -> String
-formatDown sfx (MkBytes d) = "Downloaded: " <> dispFloat d sfx
+readAndNormalize :: String -> String -> RunResult String
+readAndNormalize num suffix = dispAnyBytes . normalizeAny <$> readWithSuffix @Double num suffix
 
-formatUp :: String -> Bytes 'Up Float -> String
-formatUp sfx (MkBytes u) = "Uploaded:     " <> dispFloat u sfx
+readWithSuffix :: Read a => String -> String -> RunResult (AnyByteSz b a)
+readWithSuffix s "" = MkAnyByteSz <$> readBytes s MkB
+readWithSuffix s "K" = MkAnyByteSz <$> readBytes s MkKB
+readWithSuffix s "M" = MkAnyByteSz <$> readBytes s MkMB
+readWithSuffix s "G" = MkAnyByteSz <$> readBytes s MkGB
+readWithSuffix s "T" = MkAnyByteSz <$> readBytes s MkTB
+readWithSuffix _ x = RFailure $ "Bad byte suffix found: " <> x
 
-dispFloat :: Float -> String -> String
-dispFloat x sfx
-  | x > 999 = rnd x sfx
-  | otherwise = show x <> sfx
-  where rnd n = TP.printf "%.2f" (n / 1_000)
-          <> (\case
-               "K" -> "M"
-               "M" -> "G"
-               "G" -> "T"
-               t -> t)
+dispTotal :: String -> String -> String
+dispTotal down up =
+  "Downloaded: "
+    <> down
+    <> "\nUploaded:     "
+    <> up

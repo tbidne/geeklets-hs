@@ -15,7 +15,7 @@ memoryIO =
   runCmd
     "memory_pressure\
     \ | grep \"System-wide memory free percentage\"\
-    \ | awk \'{print int($5)/2}\'"
+    \ | awk \'{print int(100-$5)/2}\'"
 
 parseRaw :: String -> RunResult String
 parseRaw = matchRx >=> intStrToGeekLetsChar
