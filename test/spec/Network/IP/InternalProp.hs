@@ -1,6 +1,6 @@
 {-# LANGUAGE DataKinds #-}
 
-module Network.IP.InternalSpec
+module Network.IP.InternalProp
   ( hprop_combineIPs,
   )
 where

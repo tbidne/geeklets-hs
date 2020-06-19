@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: b9424df862af42af760a4311324df0f15fc4d430e57176c506c7f42c418490ef
+-- hash: 08a6995971c6fad561d3e211ee98789ce34ca7524928643ba012c370c59134f4
 
 name:           geeklets-hs
 version:        0.1.0.0
@@ -76,8 +76,9 @@ test-suite spec
   other-modules:
       Bytes.NetworkBytesProp
       Bytes.NetworkBytesSpec
-      Network.IP.InternalSpec
-      Network.Speed.InternalSpec
+      Network.IP.InternalProp
+      Network.Speed.InternalProp
+      PureCLISpec
       Paths_geeklets_hs
   hs-source-dirs:
       test/spec

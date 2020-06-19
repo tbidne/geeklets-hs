@@ -3,7 +3,7 @@
 {-# LANGUAGE NumericUnderscores #-}
 {-# LANGUAGE TypeApplications #-}
 
-module Network.Speed.InternalSpec
+module Network.Speed.InternalProp
   ( hprop_parseSucceeds,
   )
 where
