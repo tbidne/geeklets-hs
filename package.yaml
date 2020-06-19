@@ -49,3 +49,20 @@ executables:
     - -with-rtsopts=-N
     dependencies:
     - geeklets-hs
+
+tests:
+  spec:
+    main: Driver.hs
+    source-dirs: test/spec
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - geeklets-hs
+    - hedgehog
+    - hspec
+    - tasty
+    - tasty-discover
+    - tasty-hedgehog
+    - tasty-hspec

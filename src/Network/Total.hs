@@ -37,7 +37,7 @@ regex :: String
 regex = "[0-9]+\\/([0-9]+)([KMG]) [0-9]+\\/([0-9]+)([KMG])"
 
 readAndNormalize :: String -> String -> RunResult String
-readAndNormalize num suffix = dispAnyBytes . normalizeAny <$> readWithSuffix @Float num suffix
+readAndNormalize num suffix = dispAnyBytes . normalizeAny <$> readWithSuffix @Double num suffix
 
 readWithSuffix :: Read a => String -> String -> RunResult (AnyByteSz b a)
 readWithSuffix s "" = MkAnyByteSz <$> readBytes s MkB

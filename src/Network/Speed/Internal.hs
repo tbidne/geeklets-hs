@@ -4,6 +4,7 @@
 module Network.Speed.Internal
   ( absDiff,
     parseAndDisplayDiff,
+    parseRaw,
   )
 where
 
@@ -13,11 +14,11 @@ import Common
 import Control.Applicative (liftA2)
 import Types
 
-absDiff :: (Applicative f, Num a) => f a -> f a -> f a
-absDiff x = (<$>) abs . liftA2 (-) x
-
 parseAndDisplayDiff :: String -> String -> RunResultStr
 parseAndDisplayDiff s1 s2 = dispSpeed <$> absDiff (parseRaw s1) (parseRaw s2)
+
+absDiff :: (Applicative f, Num a) => f a -> f a -> f a
+absDiff x = (<$>) abs . liftA2 (-) x
 
 parseRaw :: String -> RunResult (NetworkBytesPair 'B 'B Integer)
 parseRaw s =
@@ -29,7 +30,7 @@ parseRaw s =
 regex :: String
 regex = "([0-9]+) ([0-9]+)"
 
-dispSpeed ::  NetworkBytesPair s t Integer -> String
+dispSpeed :: NetworkBytesPair s t Integer -> String
 dispSpeed (MkBytesPair (d, u)) =
   let d' = normalize $ fmap (fromInteger @Double) d
       u' = normalize $ fmap (fromInteger @Double) u

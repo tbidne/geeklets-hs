@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 7c32dda1f2ffe0ca9800e9cbb3f9dff2464a6efdadc6c5e80d476fd87c6e92ce
+-- hash: b9424df862af42af760a4311324df0f15fc4d430e57176c506c7f42c418490ef
 
 name:           geeklets-hs
 version:        0.1.0.0
@@ -27,13 +27,17 @@ source-repository head
 
 library
   exposed-modules:
-      Bytes
+      Bytes.NetworkBytes
+      Bytes.NetworkBytesPair
+      Bytes.Size
       Common
       Freer
       IOUtils
       Network
       Network.IP
+      Network.IP.Internal
       Network.Speed
+      Network.Speed.Internal
       Network.SSID
       Network.Total
       System
@@ -64,4 +68,29 @@ executable geeklets-exe
     , geeklets-hs
     , process
     , regex-tdfa
+  default-language: Haskell2010
+
+test-suite spec
+  type: exitcode-stdio-1.0
+  main-is: Driver.hs
+  other-modules:
+      Bytes.NetworkBytesProp
+      Bytes.NetworkBytesSpec
+      Network.IP.InternalSpec
+      Network.Speed.InternalSpec
+      Paths_geeklets_hs
+  hs-source-dirs:
+      test/spec
+  ghc-options: -O2 -Wall -Wpartial-fields -Wmissing-home-modules -Widentities -Wmissing-export-lists -Wcompat -Wredundant-constraints -Wincomplete-record-updates -Wincomplete-uni-patterns -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      base >=4.7 && <5
+    , geeklets-hs
+    , hedgehog
+    , hspec
+    , process
+    , regex-tdfa
+    , tasty
+    , tasty-discover
+    , tasty-hedgehog
+    , tasty-hspec
   default-language: Haskell2010

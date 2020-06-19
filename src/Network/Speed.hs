@@ -5,7 +5,6 @@ module Network.Speed
   )
 where
 
---import Bytes
 import Control.Applicative (liftA2)
 import Control.Monad (join)
 import qualified Control.Concurrent as C
