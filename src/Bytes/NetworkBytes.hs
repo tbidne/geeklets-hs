@@ -44,19 +44,12 @@ instance Functor (NetworkBytes b s) where
   fmap f (MkGB x) = MkGB $ f x
   fmap f (MkTB x) = MkTB $ f x
 
-instance Show a => Show (NetworkBytes 'Up s a) where
-  show (MkB a) = "B Up " <> show a
-  show (MkKB a) = "KB Up " <> show a
-  show (MkMB a) = "MB Up " <> show a
-  show (MkGB a) = "GB Up " <> show a
-  show (MkTB a) = "TB Up " <> show a
-
-instance Show a => Show (NetworkBytes 'Down s a) where
-  show (MkB a) = "B Down " <> show a
-  show (MkKB a) = "KB Down " <> show a
-  show (MkMB a) = "MB Down " <> show a
-  show (MkGB a) = "GB Down " <> show a
-  show (MkTB a) = "TB Down " <> show a
+instance Show a => Show (NetworkBytes b s a) where
+  show (MkB a) = "MkB " <> show a
+  show (MkKB a) = "MkKB " <> show a
+  show (MkMB a) = "MkMB " <> show a
+  show (MkGB a) = "MkGB " <> show a
+  show (MkTB a) = "MkTB " <> show a
 
 instance Eq a => Eq (NetworkBytes b s a) where
   x == y = (unNetworkBytes x) == (unNetworkBytes y)
@@ -130,10 +123,7 @@ unNetworkBytes (MkTB x) = x
 data AnyByteSz b a where
   MkAnyByteSz :: NetworkBytes b s a -> AnyByteSz b a
 
-instance Show a => Show (AnyByteSz 'Down a) where
-  show (MkAnyByteSz b) = "MkAnyByteSz " <> show b
-
-instance Show a => Show (AnyByteSz 'Up a) where
+instance Show a => Show (AnyByteSz b a) where
   show (MkAnyByteSz b) = "MkAnyByteSz " <> show b
 
 instance Functor (AnyByteSz b) where
