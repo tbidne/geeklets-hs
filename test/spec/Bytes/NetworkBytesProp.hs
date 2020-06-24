@@ -1,6 +1,7 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE GADTs #-}
 {-# LANGUAGE NumericUnderscores #-}
+{-# LANGUAGE OverloadedStrings #-}
 
 module Bytes.NetworkBytesProp
   ( networkBytesProps,
@@ -34,29 +35,34 @@ verifyNormalized bytes (MkAnyByteSz bytes'@(MkTB _)) = verifyTB bytes bytes'
 
 verifyB :: (Show a, Num a, Ord a) => NetworkBytes b 'B a -> NetworkBytes b 'B a -> H.PropertyT IO ()
 verifyB (MkB bytes) (MkB bytes') = do
+  H.cover 10 "Normalized to B" True
   H.assert $ bytes < 1_000
   bytes === bytes'
 
 verifyKB :: (Show a, Fractional a, Ord a) => NetworkBytes b 'B a -> NetworkBytes b 'KB a -> H.PropertyT IO ()
 verifyKB (MkB bytes) (MkKB bytes') = do
+  H.cover 10 "Normalized to KB" True
   H.assert $ bytes' < 1_000
   H.annotate $ "B: " <> show bytes <> ", KB: " <> show bytes'
   eqEpsilon (bytes / 1_000) bytes' 1
 
 verifyMB :: (Show a, Fractional a, Ord a) => NetworkBytes b 'B a -> NetworkBytes b 'MB a -> H.PropertyT IO ()
 verifyMB (MkB bytes) (MkMB bytes') = do
+  H.cover 10 "Normalized to MB" True
   H.assert $ bytes' < 1_000
   H.annotate $ "B: " <> show bytes <> ", MB: " <> show bytes'
   eqEpsilon (bytes / 1_000_000) bytes' 1
 
 verifyGB :: (Show a, Fractional a, Ord a) => NetworkBytes b 'B a -> NetworkBytes b 'GB a -> H.PropertyT IO ()
 verifyGB (MkB bytes) (MkGB bytes') = do
+  H.cover 10 "Normalized to GB" True
   H.assert $ bytes' < 1_000
   H.annotate $ "B: " <> show bytes <> ", GB: " <> show bytes'
   eqEpsilon (bytes / 1_000_000_000) bytes' 1
 
 verifyTB :: (Show a, Fractional a, Ord a) => NetworkBytes b 'B a -> NetworkBytes b 'TB a -> H.PropertyT IO ()
 verifyTB (MkB bytes) (MkTB bytes') = do
+  H.cover 10 "Normalized to TB" True
   H.assert $ bytes' < 1_000
   H.annotate $ "B: " <> show bytes <> ", TB: " <> show bytes'
   eqEpsilon (bytes / 1_000_000_000_000) bytes' 1
