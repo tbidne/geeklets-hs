@@ -1,22 +1,24 @@
 {-# LANGUAGE GADTs #-}
 
-module PureCLISpec
-  ( spec_pureCLI,
+module TypesSpec
+  ( dslSpec,
   )
 where
 
 import Freer
-import Types
 import Test.Hspec
+import qualified Test.Tasty as T
+import qualified Test.Tasty.Hspec as TH
+import Types
 
-spec_pureCLI :: Spec
-spec_pureCLI = do
-  describe "PureCLISpec" $ do
-    it "Parse and run succeeds" $
+dslSpec :: IO [T.TestTree]
+dslSpec = TH.testSpecs $ do
+  describe "Types" $ do
+    it "DSL parse and run succeeds" $
       foldFreer interpretSuccess runCLI `shouldSatisfy` verifyCLI
-    it "Parse failure" $
+    it "DSL parse failure" $
       foldFreer interpretParseFail runCLI `shouldSatisfy` verifyParseFail
-    it "Cmd failure" $
+    it "DSL cmd failure" $
       foldFreer interpretCmdFail runCLI `shouldSatisfy` verifyCmdFail
 
 verifyCLI :: Identity () -> Bool

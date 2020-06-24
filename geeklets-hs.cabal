@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 08a6995971c6fad561d3e211ee98789ce34ca7524928643ba012c370c59134f4
+-- hash: fd01a1b40d2d7afa85626b249d8ed50e82a25875184ac8e133c8d174d7d830cc
 
 name:           geeklets-hs
 version:        0.1.0.0
@@ -72,13 +72,13 @@ executable geeklets-exe
 
 test-suite spec
   type: exitcode-stdio-1.0
-  main-is: Driver.hs
+  main-is: Main.hs
   other-modules:
       Bytes.NetworkBytesProp
       Bytes.NetworkBytesSpec
       Network.IP.InternalProp
       Network.Speed.InternalProp
-      PureCLISpec
+      TypesSpec
       Paths_geeklets_hs
   hs-source-dirs:
       test/spec
@@ -91,7 +91,6 @@ test-suite spec
     , process
     , regex-tdfa
     , tasty
-    , tasty-discover
     , tasty-hedgehog
     , tasty-hspec
   default-language: Haskell2010

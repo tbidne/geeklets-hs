@@ -52,7 +52,7 @@ executables:
 
 tests:
   spec:
-    main: Driver.hs
+    main: Main.hs
     source-dirs: test/spec
     ghc-options:
     - -threaded
@@ -63,6 +63,5 @@ tests:
     - hedgehog
     - hspec
     - tasty
-    - tasty-discover
     - tasty-hedgehog
     - tasty-hspec
