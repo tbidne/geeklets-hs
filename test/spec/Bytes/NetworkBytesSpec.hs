@@ -4,16 +4,18 @@
 {-# LANGUAGE TypeApplications #-}
 
 module Bytes.NetworkBytesSpec
-  ( spec_networkBytesSpec,
+  ( networkBytesSpecs,
   )
 where
 
 import Bytes.NetworkBytes
 import Test.Hspec
+import qualified Test.Tasty as T
+import qualified Test.Tasty.Hspec as TH
 
-spec_networkBytesSpec :: Spec
-spec_networkBytesSpec = do
-  describe "Bytes.NetworkBytesSpec" $ do
+networkBytesSpecs :: IO [T.TestTree]
+networkBytesSpecs = TH.testSpecs $ do
+  describe "Bytes.NetworkBytes" $ do
     it "Displays B" $ do
       dispAnyBytes mkB `shouldBe` "5.25 B"
     it "Displays KB" $ do
